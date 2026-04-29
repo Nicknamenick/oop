@@ -14,10 +14,10 @@ open class Rocket(
     y: Float,
     val initialVelocity: Float = -5f
 ): AbstractFirework(x, y) {
-    var vy: Float = initialVelocity // Aufwärtsbewegung
-    var gravity: Float = 0.2f // Beschleunigung nach unten
+    var vy: Float = initialVelocity
+    var gravity: Float = 0.2f
     var exploded: Boolean = false
-    val particles = mutableListOf<Particles>()
+    val particles = mutableListOf<Particle>()
 
     override fun update() {
         if (!exploded) {
@@ -36,7 +36,6 @@ open class Rocket(
         }
     }
 
-    // TODO: aufstieg anpassen
     override fun draw(p: PApplet) {
         if (!exploded) {
             p.fill(200) // fixed color for the rocket asscent
@@ -48,25 +47,5 @@ open class Rocket(
 
     open fun explode(){
         exploded = true
-    }
-}
-
-open class ShapeRocket(
-    x: Float,
-    y: Float,
-    initialVelocity: Float = -5f,
-    val lifespan: Float,
-    val shape: Shape,
-    val partNum: Int = 50
-    ): Rocket(x, y, initialVelocity) {
-    override fun explode() {
-        super.explode()
-        for (i in 0 until partNum) {
-            val angle = Math.random() * 2 * Math.PI
-            val speed = Math.random() * 3 + 2
-            val vx = (Math.cos(angle) * speed).toFloat()
-            val vy = (Math.sin(angle) * speed).toFloat()
-            particles.add(Particles(x, y, vx, vy, shape, 255, lifespan))
-        }
     }
 }
