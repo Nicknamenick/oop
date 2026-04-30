@@ -76,6 +76,30 @@ class StarExplosionShape : ExplosionShape() {
     }
 }
 
+class TriangleExplosionShape : ExplosionShape() {
+    override fun direction(index: Int, total: Int, power: Float): Pair<Float, Float> {
+        val safeTotal = total.coerceAtLeast(1)
+
+        val top = Pair(0f, -1f)
+        val left = Pair(-0.866f, 0.5f)
+        val right = Pair(0.866f, 0.5f)
+
+        val t = (index.toDouble() / safeTotal.toDouble()) * 3.0
+        val side = t.toInt().coerceIn(0, 2)
+        val localT = (t - side).toFloat()
+
+        val (a, b) = when (side) {
+            0 -> top to right
+            1 -> right to left
+            else -> left to top
+        }
+
+        val dx = a.first + (b.first - a.first) * localT
+        val dy = a.second + (b.second - a.second) * localT
+        return Pair(dx * power, dy * power)
+    }
+}
+
 class Circle : Shape {
     override fun draw(p: PApplet, x: Float, y: Float, size: Float) {
         p.noStroke()
