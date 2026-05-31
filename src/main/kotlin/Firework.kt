@@ -15,13 +15,13 @@ open class Rocket(
     val initialVelocity: Float = -5f
 ): AbstractFirework(x, y) {
     var vy: Float = initialVelocity
-    var gravity: Float = 0.2f
+    var gravity: Float = 0.2f // TODO - anpassbar machen
     var exploded: Boolean = false
     val particles = mutableListOf<Particle>()
 
     override fun update() {
         if (!exploded) {
-            vy += gravity //TODO anpassen
+            vy += gravity
             y += vy
             x += (Math.random().toFloat() - 0.5f) * 2f // leichte horizontale Bewegung TODO(anpassen)
             if (vy >= 0) {

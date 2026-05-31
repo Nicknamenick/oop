@@ -17,7 +17,7 @@ abstract class Particle(
     open fun update(){
         x += vx
         y += vy
-        vy += 0.1f
+        vy += 0.08f
         lifespan -= 2f
     }
     abstract fun draw(p: PApplet)
