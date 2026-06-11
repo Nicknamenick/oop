@@ -1,0 +1,34 @@
+{
+  "queue": [
+    { "time": 0.0, "rocketKey": "firework_01", "x": 400.0, "initialVelocity": 12.0 },
+
+    { "time": 1.5, "rocketKey": "firework_02", "x": 150.0, "initialVelocity": 13.5 },
+    { "time": 1.5, "rocketKey": "firework_02", "x": 650.0, "initialVelocity": 13.5 },
+
+    { "time": 3.8, "rocketKey": "firework_03", "x": 250.0, "initialVelocity": 10.0 },
+    { "time": 4.1, "rocketKey": "firework_03", "x": 550.0, "initialVelocity": 10.0 },
+    { "time": 4.5, "rocketKey": "firework_03", "x": 400.0, "initialVelocity": 14.0 },
+
+    { "time": 6.0, "rocketKey": "firework_01", "x": 200.0, "initialVelocity": 11.5 },
+    { "time": 6.3, "rocketKey": "firework_02", "x": 300.0, "initialVelocity": 12.0 },
+    { "time": 6.6, "rocketKey": "firework_01", "x": 600.0, "initialVelocity": 11.5 },
+    { "time": 6.9, "rocketKey": "firework_02", "x": 500.0, "initialVelocity": 12.0 },
+
+    { "time": 8.5, "rocketKey": "firework_02", "x": 200.0, "initialVelocity": 14.5 },
+    { "time": 8.5, "rocketKey": "firework_02", "x": 400.0, "initialVelocity": 14.5 },
+    { "time": 8.5, "rocketKey": "firework_02", "x": 600.0, "initialVelocity": 14.5 },
+
+    { "time": 9.2, "rocketKey": "firework_03", "x": 300.0, "initialVelocity": 11.0 },
+    { "time": 9.2, "rocketKey": "firework_03", "x": 500.0, "initialVelocity": 11.0 },
+
+    { "time": 11.5, "rocketKey": "firework_01", "x": 100.0, "initialVelocity": 11.0 },
+    { "time": 11.7, "rocketKey": "firework_01", "x": 250.0, "initialVelocity": 11.5 },
+    { "time": 11.9, "rocketKey": "firework_01", "x": 400.0, "initialVelocity": 12.0 },
+    { "time": 12.1, "rocketKey": "firework_01", "x": 550.0, "initialVelocity": 11.5 },
+    { "time": 12.3, "rocketKey": "firework_01", "x": 700.0, "initialVelocity": 11.0 },
+
+    { "time": 14.0, "rocketKey": "firework_03", "x": 200.0, "initialVelocity": 13.0 },
+    { "time": 14.0, "rocketKey": "firework_02", "x": 400.0, "initialVelocity": 15.0 },
+    { "time": 14.0, "rocketKey": "firework_03", "x": 600.0, "initialVelocity": 13.0 }
+  ]
+}

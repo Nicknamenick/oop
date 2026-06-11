@@ -1,0 +1,44 @@
+{
+  "x": 0.0,
+  "y": 0.0,
+  "initialVelocity": 10.0,
+  "rocketColor": "0xFFFFFF",
+  "payloads": [
+    {
+      "partNum": 300,
+      "explosionShape": "STAR",
+      "particleFactories": [
+        "STANDARD"
+      ],
+      "particleShape": "CIRCLE",
+      "baseColor": "0xFF0000",
+      "cRange": "0x00FF00",
+      "size": 5.0,
+      "power": 0.7
+    },
+    {
+      "partNum": 300,
+      "explosionShape": "CIRCLE",
+      "particleFactories": [
+        "STANDARD"
+      ],
+      "particleShape": "CIRCLE",
+      "baseColor": "0x0000FF",
+      "cRange": "0xFF00FF",
+      "size": 5.0,
+      "power": 0.6
+    },
+    {
+      "partNum": 200,
+      "explosionShape": "SQUARE",
+      "particleFactories": [
+        "CRACKLE"
+      ],
+      "particleShape": "SQUARE",
+      "baseColor": "0xFFFF00",
+      "cRange": "0x0000FF",
+      "size": 2.5,
+      "power": 0.5
+    }
+  ]
+}

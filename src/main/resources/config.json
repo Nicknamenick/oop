@@ -1,0 +1,12 @@
+{
+  "windowSizeX": 1200,
+  "windowSizeY": 800,
+  "gravity":0.15,
+  "backgroundColor":[0, 0, 0, 25],
+  "mode": "show",
+  "minRockets": 1,
+  "maxRockets": 4,
+  "minInitialVelocity": 8.0,
+  "maxInitialVelocity": 15.0,
+  "rocketSpawnChance": 0.75
+}

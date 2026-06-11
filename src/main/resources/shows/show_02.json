@@ -1,0 +1,22 @@
+{
+  "queue": [
+    {
+      "time": 2.5,
+      "rocketKey": "firework_01",
+      "x": 100.0,
+      "initialVelocity": 10.0
+    },
+    {
+      "time": 2.8,
+      "rocketKey": "firework_02",
+      "x": 400.0,
+      "initialVelocity": 15.0
+    },
+    {
+      "time": 3.0,
+      "rocketKey": "firework_03",
+      "x": 700.0,
+      "initialVelocity": 12.0
+    }
+  ]
+}

@@ -15,7 +15,7 @@ open class Rocket(
     val initialVelocity: Float = -5f
 ): AbstractFirework(x, y) {
     var vy: Float = initialVelocity
-    var gravity: Float = 0.2f // TODO - anpassbar machen
+    var gravity: Float = config.gravity ?: 0.2f
     var exploded: Boolean = false
     val particles = mutableListOf<Particle>()
 
@@ -41,6 +41,7 @@ open class Rocket(
             p.fill(200) // fixed color for the rocket asscent
             p.ellipse(x, y, 10f, 20f)
         }else{
+            vy = 0f
             particles.forEach { it.draw(p) }
         }
     }

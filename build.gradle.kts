@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
    implementation("org.processing:core:4.5.3")
+   implementation("com.google.code.gson:gson:2.11.0")
 }
 
 kotlin {

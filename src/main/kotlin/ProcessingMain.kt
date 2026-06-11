@@ -1,4 +1,5 @@
 import processing.core.PApplet
+import com.google.gson.Gson
 
 object Global {
     lateinit var papp: PApplet
@@ -10,7 +11,7 @@ class ProcessingMain : PApplet() {
     private var paused = false
 
     override fun settings() {
-        size(1200, 800)
+        size(config.windowSizeX, config.windowSizeY)
     }
 
     override fun setup() {
@@ -19,39 +20,95 @@ class ProcessingMain : PApplet() {
     }
 
     override fun draw() {
-        background(0f, 0f, 0f, 25f)
+        // setup background color using config values
+        background(config.backgroundColor[0],
+            config.backgroundColor[1],
+            config.backgroundColor[2],
+            config.backgroundColor[3]
+        )
         // ground: lines use stroke (not fill). set stroke color and weight, and remove trailing comma
         stroke(255f, 255f, 255f)
         strokeWeight(2f)
         line(80f, height.toFloat() -10f, width.toFloat() - 80f, height.toFloat() - 10f)
         noStroke()
-        if (random(0.75f) < 0.02f && fireworks.size <= 3) {
-            val initialVelocity = random(-16f, -12f)
+
+        if(config.mode == "normal"){
+            modeNormal()
+        }
+        if(config.mode == "show"){
+            modeShow()
+        }
+
+        // TODO - mouseclick spawn
+    }
+
+
+
+    fun modeNormal() {
+        if ((random(0.75f) < 0.02f && fireworks.size <= 3) || fireworks.isEmpty()) {
+            val initialVelocity = random(-config.maxInitialVelocity, -config.minInitialVelocity)
             val x = random(width.toFloat())
             val y = height.toFloat()
-            fireworks.add(
-                when (random(3f).toInt()) {
-                    0 -> rocket1(x, y, initialVelocity)
-                    1 -> rocket2(x, y, initialVelocity)
-                    else -> rocket3(x, y, initialVelocity)
-                }
-            )
+
+            val randomIndex = random(3f).toInt() + 1
+            val rocketKey = String.format("firework_%02d", randomIndex)
+
+            val rocketData = rocketRegistry[rocketKey]
+
+            val newFirework: AbstractFirework? = rocketData?.let { data ->
+                Config.createRocketFromConfig(x, y, initialVelocity, data)
+            } ?: run {
+                println("Warnung: $rocketKey wurde nicht in der Registry gefunden!")
+                null
+            }
+
+            if (newFirework != null) {
+                fireworks.add(newFirework)
+            }
         }
-        if(isMouseLeftPressed()){
-            fireworks.add(
-                when (random(3f).toInt()) {
-                    0 -> rocket1(mouseX.toFloat(), mouseY.toFloat(), random(-16f, -12f))
-                    1 -> rocket2(mouseX.toFloat(), mouseY.toFloat(), random(-16f, -12f))
-                    else -> rocket3(mouseX.toFloat(), mouseY.toFloat(), random(-16f, -12f))
-                }
-            )
-        }
+
         fireworks.forEach { it.update() }
         fireworks.forEach { it.draw(this) }
         fireworks.removeAll { it.isDead }
-
     }
 
+    var currentQueueIndex: Int = 0
+    var showStartTime: Float = -1f
+    fun modeShow() {
+        // 1. Show beim ersten Aufruf initialisieren
+        if (showStartTime == -1f) {
+            showStartTime = millis() / 1000f
+        }
+
+        val currentShowKey = "show_01" // Oder deine dynamische Logik
+        val showData = showRegistry[currentShowKey] ?: return
+
+        val elapsedSeconds = (millis() / 1000f) - showStartTime
+
+        // 2. Prüfen, ob der aktuelle Index fällig ist
+        // Wir nutzen hier KEINE while-Schleife, sondern ein if
+        if (currentQueueIndex < showData.queue.size) {
+            val entry = showData.queue[currentQueueIndex]
+
+            if (elapsedSeconds >= entry.time) {
+                val rocketData = rocketRegistry[entry.rocketKey]
+                if (rocketData != null) {
+                    val newFirework = Config.createRocketFromConfig(entry.x,height.toFloat(), -entry.initialVelocity, rocketData)
+                    fireworks.add(newFirework)
+                    println("Rakete ${entry.rocketKey} bei ${elapsedSeconds}s gespawnt.")
+                }
+                // Index erhöhen, damit beim nächsten Frame die nächste Rakete geprüft wird
+                currentQueueIndex++
+            }
+        }
+
+        // Update & Draw Logik
+        fireworks.forEach { it.update() }
+        fireworks.forEach { it.draw(this) }
+        fireworks.removeAll { it.isDead }
+    }
+
+    // help functions
     override fun keyPressed() {
         if (key == ' ') {
             paused = !paused
@@ -62,7 +119,6 @@ class ProcessingMain : PApplet() {
             }
         }
     }
-
     fun isMouseLeftPressed(): Boolean {
         return mousePressed && mouseButton == LEFT
     }
