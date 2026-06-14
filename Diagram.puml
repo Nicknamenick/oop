@@ -1,4 +1,4 @@
-@startuml
+@startuml "Fireworks Diagram Final"
 ' --- Schrifteinstellungen für höhere Lesbarkeit ---
 skinparam defaultFontSize 16
 skinparam classFontSize 19
@@ -6,7 +6,7 @@ skinparam attributeFontSize 15
 skinparam methodFontSize 15
 
 skinparam monochrome true
-skinparam shadowing false
+skinparam shadowing true
 
 ' --- Fireworks Hierarchie ---
 abstract class AbstractFirework {
