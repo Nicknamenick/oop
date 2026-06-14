@@ -19,6 +19,31 @@ class ProcessingMain : PApplet() {
         background(255)
     }
 
+    override fun mousePressed() {
+        super.mousePressed()
+        if(mouseButton == LEFT){
+            val initialVelocity = random(-config.maxInitialVelocity, -config.minInitialVelocity)
+            val x = mouseX.toFloat()
+            val y = mouseY.toFloat()
+
+            val randomIndex = random(3f).toInt() + 1
+            val rocketKey = String.format("firework_%02d", randomIndex)
+
+            val rocketData = rocketRegistry[rocketKey]
+
+            val newFirework: AbstractFirework? = rocketData?.let { data ->
+                Config.createRocketFromConfig(x, y, initialVelocity, data)
+            } ?: run {
+                println("Warnung: $rocketKey wurde nicht in der Registry gefunden!")
+                null
+            }
+
+            if (newFirework != null) {
+                fireworks.add(newFirework)
+            }
+        }
+    }
+
     override fun draw() {
         // setup background color using config values
         background(config.backgroundColor[0],

@@ -4,7 +4,7 @@
   "gravity":0.15,
   "gravityParticle": 0.08,
   "backgroundColor":[0, 0, 0, 25],
-  "mode": "show",
+  "mode": "normal",
   "minRockets": 1,
   "maxRockets": 4,
   "minInitialVelocity": 8.0,
