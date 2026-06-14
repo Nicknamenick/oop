@@ -23,7 +23,7 @@ open class Rocket(
         if (!exploded) {
             vy += gravity
             y += vy
-            x += (Math.random().toFloat() - 0.5f) * 2f // leichte horizontale Bewegung TODO(anpassen)
+            x += (Math.random().toFloat() - 0.5f) * 2f
             if (vy >= 0) {
                 explode()
             }

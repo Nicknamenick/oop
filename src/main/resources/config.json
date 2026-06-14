@@ -2,6 +2,7 @@
   "windowSizeX": 1200,
   "windowSizeY": 800,
   "gravity":0.15,
+  "gravityParticle": 0.08,
   "backgroundColor":[0, 0, 0, 25],
   "mode": "show",
   "minRockets": 1,

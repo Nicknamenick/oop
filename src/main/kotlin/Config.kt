@@ -23,6 +23,7 @@ class Config {
         val windowSizeX: Int,
         val windowSizeY: Int,
         val gravity: Float,
+        val gravityParticle: Float,
         val mode: String,
         val backgroundColor: FloatArray = floatArrayOf(0f, 0f, 0f, 25f ),
         val minRockets: Int,

@@ -21,7 +21,7 @@ class RocketSpawner(
         super.explode()
 
         for (payload in payloads) {
-            val factories = if (payload.particleFactories.isEmpty()) listOf(::StandardParticle) else payload.particleFactories
+            val factories = payload.particleFactories.ifEmpty { listOf(::StandardParticle) }
 
             for (i in 0 until payload.partNum) {
                 val speed = Math.random().toFloat() * 4 + 1

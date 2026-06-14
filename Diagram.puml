@@ -1,0 +1,135 @@
+@startuml
+' --- Schrifteinstellungen für höhere Lesbarkeit ---
+skinparam defaultFontSize 16
+skinparam classFontSize 19
+skinparam attributeFontSize 15
+skinparam methodFontSize 15
+
+skinparam monochrome true
+skinparam shadowing false
+
+' --- Fireworks Hierarchie ---
+abstract class AbstractFirework {
+    + x: Float
+    + y: Float
+    + isDead: Boolean
+    + {abstract} update(): Unit
+    + {abstract} draw(p: Object): Unit
+}
+
+class Rocket {
+    + initialVelocity: Float
+    + vy: Float
+    + gravity: Float
+    + exploded: Boolean
+    + particles: MutableList<Particle>
+    + update(): Unit
+    + draw(p: Object): Unit
+    + explode(): Unit
+}
+AbstractFirework <|-- Rocket
+
+class RocketSpawner {
+    + lifespan: Float
+    + rocketColor: Int
+    + payloads: List<ExplosionPayload>
+    + explode(): Unit
+}
+Rocket <|-- RocketSpawner
+
+class ExplosionPayload <<data>> {
+    + partNum: Int
+    + explosionShape: ExplosionShape
+    + particleFactories: List<Object>
+    + particleShape: Shape
+    + baseColor: Int
+    + cRange: Int
+    + size: Float
+    + power: Float
+}
+
+' --- Particles Hierarchie ---
+abstract class Particle {
+    + x: Float
+    + y: Float
+    + vx: Float
+    + vy: Float
+    + shape: Shape
+    + color: Int
+    + lifespan: Float
+    + size: Float
+    + update(): Unit
+    + {abstract} draw(p: Object): Unit
+    + isDead(): Boolean
+}
+
+class StandardParticle {
+    + draw(p: Object): Unit
+}
+Particle <|-- StandardParticle
+
+class SpreadParticle {
+    - crackleTimer: Int
+    + update(): Unit
+    + draw(p: Object): Unit
+}
+Particle <|-- SpreadParticle
+
+class CrackleParticle {
+    - inner: Particle
+    - intensity: Float
+    - interval: Int
+    - counter: Int
+    + update(): Unit
+    + draw(p: Object): Unit
+}
+Particle <|-- CrackleParticle
+
+' --- Shapes ---
+interface Shape {
+    + draw(p: Object, x: Float, y: Float, size: Float): Unit
+}
+
+class Circle implements Shape {
+    + draw(p: Object, x: Float, y: Float, size: Float): Unit
+}
+
+class Square implements Shape {
+    + draw(p: Object, x: Float, y: Float, size: Float): Unit
+}
+
+' --- Explosion Shapes ---
+abstract class ExplosionShape {
+    + {abstract} direction(index: Int, total: Int, power: Float): Pair<Float, Float>
+}
+
+class CircleExplosionShape extends ExplosionShape {
+    + direction(index: Int, total: Int, power: Float): Pair<Float, Float>
+}
+
+class SquareExplosionShape extends ExplosionShape {
+    + direction(index: Int, total: Int, power: Float): Pair<Float, Float>
+}
+
+class StarExplosionShape {
+    - spikes: Int
+    - outerRadius: Float
+    - innerRadius: Float
+    - jitterAmount: Float
+    + direction(index: Int, total: Int, power: Float): Pair<Float, Float>
+}
+ExplosionShape <|-- StarExplosionShape
+
+class TriangleExplosionShape extends ExplosionShape {
+    + direction(index: Int, total: Int, power: Float): Pair<Float, Float>
+}
+
+' --- Beziehungen & Verknüpfungen ---
+Rocket o-- Particle : enthält >
+RocketSpawner o-- ExplosionPayload : besitzt >
+ExplosionPayload --> ExplosionShape : definiert >
+ExplosionPayload --> Shape : nutzt >
+Particle --> Shape : wird gezeichnet mit >
+CrackleParticle o-- Particle : dekoriert (Decorator Pattern) >
+
+@enduml
