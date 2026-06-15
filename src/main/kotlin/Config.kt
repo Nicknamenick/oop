@@ -102,7 +102,7 @@ class Config {
                 x = x,
                 y = y,
                 initialVelocity = initialVelocity,
-                lifespan = Global.papp.random(200f, 300f), // Bleibt dynamisch im Code
+                lifespan = Global.papp.random(200f, 300f),
                 rocketColor = parseHexColor(data.rocketColor),
                 payloads = realPayloads
             )

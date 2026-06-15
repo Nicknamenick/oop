@@ -63,8 +63,6 @@ class ProcessingMain : PApplet() {
         if(config.mode == "show"){
             modeShow()
         }
-
-        // TODO - mouseclick spawn
     }
 
 
@@ -100,18 +98,15 @@ class ProcessingMain : PApplet() {
     var currentQueueIndex: Int = 0
     var showStartTime: Float = -1f
     fun modeShow() {
-        // 1. Show beim ersten Aufruf initialisieren
         if (showStartTime == -1f) {
             showStartTime = millis() / 1000f
         }
 
-        val currentShowKey = "show_01" // Oder deine dynamische Logik
+        val currentShowKey = "show_01" // TODO : load shows dynamically
         val showData = showRegistry[currentShowKey] ?: return
 
         val elapsedSeconds = (millis() / 1000f) - showStartTime
 
-        // 2. Prüfen, ob der aktuelle Index fällig ist
-        // Wir nutzen hier KEINE while-Schleife, sondern ein if
         if (currentQueueIndex < showData.queue.size) {
             val entry = showData.queue[currentQueueIndex]
 
@@ -122,12 +117,10 @@ class ProcessingMain : PApplet() {
                     fireworks.add(newFirework)
                     println("Rakete ${entry.rocketKey} bei ${elapsedSeconds}s gespawnt.")
                 }
-                // Index erhöhen, damit beim nächsten Frame die nächste Rakete geprüft wird
                 currentQueueIndex++
             }
         }
 
-        // Update & Draw Logik
         fireworks.forEach { it.update() }
         fireworks.forEach { it.draw(this) }
         fireworks.removeAll { it.isDead }

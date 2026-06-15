@@ -15,6 +15,10 @@ abstract class Particle(
     val size: Float = 5f
 ){
     open fun update(){
+        val resistance = 0.98f
+        vx *= resistance
+        vy *= resistance
+
         x += vx
         y += vy
         vy += config.gravityParticle
