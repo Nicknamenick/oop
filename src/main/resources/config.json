@@ -7,7 +7,9 @@
   "mode": "normal",
   "minRockets": 1,
   "maxRockets": 4,
-  "minInitialVelocity": 8.0,
+  "minInitialVelocity": 10.0,
   "maxInitialVelocity": 15.0,
-  "rocketSpawnChance": 0.75
+  "rocketSpawnChance": 0.75,
+  "isChainEnabled": false,
+  "collisionThreshold": 6.0
 }

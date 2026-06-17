@@ -16,8 +16,9 @@ open class Rocket(
 ): AbstractFirework(x, y) {
     var vy: Float = initialVelocity
     var gravity: Float = config.gravity ?: 0.2f
-    var exploded: Boolean = false
+    public var exploded: Boolean = false
     val particles = mutableListOf<Particle>()
+    val rocketParticles = mutableListOf<Particle>()
 
     override fun update() {
         if (!exploded) {
@@ -38,8 +39,10 @@ open class Rocket(
 
     override fun draw(p: PApplet) {
         if (!exploded) {
+            //val factory = listOf<ParticleFactory>(::StandardParticle)
+
             p.fill(200) // fixed color for the rocket asscent
-            p.ellipse(x, y, 10f, 20f)
+            p.ellipse(x, y, 3f, 10f)
         }else{
             vy = 0f
             particles.forEach { it.draw(p) }

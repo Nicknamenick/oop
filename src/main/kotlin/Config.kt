@@ -30,7 +30,9 @@ class Config {
         val maxRockets: Int,
         val rocketSpawnChance: Float,
         val minInitialVelocity: Float,
-        val maxInitialVelocity: Float
+        val maxInitialVelocity: Float,
+        val isChainEnabled: Boolean,
+        val collisionThreshold: Float,
     )
 
     data class QueueEntry(

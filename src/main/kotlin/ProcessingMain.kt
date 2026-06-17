@@ -8,6 +8,7 @@ object Global {
 class ProcessingMain : PApplet() {
 
     private val fireworks = mutableListOf<AbstractFirework>()
+    private val eventListener = EventListener(fireworks)
     private var paused = false
 
     override fun settings() {
@@ -90,6 +91,7 @@ class ProcessingMain : PApplet() {
             }
         }
 
+        eventListener.checkParticleCollision()
         fireworks.forEach { it.update() }
         fireworks.forEach { it.draw(this) }
         fireworks.removeAll { it.isDead }
