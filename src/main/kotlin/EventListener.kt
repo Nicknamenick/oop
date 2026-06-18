@@ -3,10 +3,11 @@ import kotlin.math.sqrt
 class EventListener (
     private val fireworks: MutableList<AbstractFirework>
 ){
-    fun register(firework: AbstractFirework) {
-        fireworks.add(firework)
-    }
 
+    /**
+     * Checks for collisions between active rockets and particles from exploded rockets.
+     * If a collision is detected the active rocket's vertical velocity is set to 0, causing it to explode immediately
+     */
      fun checkParticleCollision(){
          if(!config.isChainEnabled) return
          val activeRockets = fireworks.filterIsInstance<Rocket>().filter { !it.exploded }

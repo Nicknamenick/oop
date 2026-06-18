@@ -1,10 +1,17 @@
-import processing.core.PApplet
+import processing.core.PGraphics
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+/**
+ * defines the shape of the explosion and how the particles are emitted.
+ * the direction function takes the index of the particle and the total number of particles to calculate the direction vector for that particle.
+ * this allows for different explosion patterns like circular, square, star-shaped or triangular explosions.
+ *
+ * Shapes define how the particles are drawn, while ExplosionShapes define the initial velocity direction of the particles
+ */
 interface Shape {
-    fun draw(p: PApplet, x: Float, y: Float, size: Float)
+    fun draw(p: PGraphics, x: Float, y: Float, size: Float)
 }
 
 abstract class ExplosionShape {
@@ -28,6 +35,7 @@ class SquareExplosionShape : ExplosionShape() {
 
         val rawX: Float
         val rawY: Float
+        // sides: 0 = top, 1 = right, 2 = bottom, 3 = left
         when (side) {
             0 -> {
                 rawX = u
@@ -47,7 +55,6 @@ class SquareExplosionShape : ExplosionShape() {
             }
         }
 
-        // Nicht normieren: Normierung macht aus der Quadratkontur wieder einen Kreis.
         return Pair(rawX*power, rawY*power)
     }
 }
@@ -101,13 +108,13 @@ class TriangleExplosionShape : ExplosionShape() {
 }
 
 class Circle : Shape {
-    override fun draw(p: PApplet, x: Float, y: Float, size: Float) {
+    override fun draw(p: PGraphics, x: Float, y: Float, size: Float) {
         p.noStroke()
         p.ellipse(x, y, size, size)
     }
 }
 class Square : Shape {
-    override fun draw(p: PApplet, x: Float, y: Float, size: Float) {
+    override fun draw(p: PGraphics, x: Float, y: Float, size: Float) {
         p.noStroke()
         p.rect(x - size / 2, y - size / 2, size, size)
     }

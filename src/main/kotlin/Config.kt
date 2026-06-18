@@ -54,6 +54,9 @@ class Config {
                 .toInt()
         }
 
+        /**
+         * Creates a RocketSpawner instance from the given configuration data
+         */
         fun createRocketFromConfig(x: Float, y: Float, initialVelocity: Float, data: RocketConfigData): RocketSpawner {
             val realPayloads = data.payloads.map { payloadData ->
 

@@ -1,3 +1,7 @@
+/**
+ * ExplosionPayload defines the properties of a single explosion that occurs when the rocket explodes
+ * A rocket can have multiple payloads
+ */
 data class ExplosionPayload(
     val partNum: Int,
     val explosionShape: ExplosionShape,
@@ -9,6 +13,10 @@ data class ExplosionPayload(
     val power: Float = 1f
 )
 
+/**
+ * RocketSpawner is a class for creating rockets that can spawn multiple explosions with different properties when they explode.
+ * Each explosion is defined by an ExplosionPayload
+ */
 class RocketSpawner(
     x: Float,
     y: Float,

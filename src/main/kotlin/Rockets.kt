@@ -1,3 +1,7 @@
+/**
+ * Example rockets with different explosion patterns and particle effects.
+ */
+
 fun rocket1(x: Float, y: Float, initialVelocity: Float): AbstractFirework {
     return RocketSpawner(
         x,

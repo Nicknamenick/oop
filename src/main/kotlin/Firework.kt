@@ -1,24 +1,31 @@
-import processing.core.PApplet
+import processing.core.PGraphics
 
+/**
+ * AbstractFirework is the base class for all fireworks.
+ * It defines the common properties and methods that all fireworks must implement.
+ */
 abstract class AbstractFirework(
     var x: Float,
     var y: Float
 ){
     var isDead: Boolean = false
     abstract fun update()
-    abstract fun draw(p: PApplet)
+    abstract fun draw(p: PGraphics)
 }
 
+/**
+ * Rocket represents the initial ascent of a firework. It moves upwards until it reaches its peak, at which point it explodes into particles.
+ * The Rocket class can be extended to create different types of rockets with unique explosion patterns and particles
+ */
 open class Rocket(
     x: Float,
     y: Float,
     val initialVelocity: Float = -5f
 ): AbstractFirework(x, y) {
     var vy: Float = initialVelocity
-    var gravity: Float = config.gravity ?: 0.2f
-    public var exploded: Boolean = false
+    var gravity: Float = config.gravity
+    var exploded: Boolean = false
     val particles = mutableListOf<Particle>()
-    val rocketParticles = mutableListOf<Particle>()
 
     override fun update() {
         if (!exploded) {
@@ -37,11 +44,10 @@ open class Rocket(
         }
     }
 
-    override fun draw(p: PApplet) {
+    override fun draw(p: PGraphics) {
         if (!exploded) {
-            //val factory = listOf<ParticleFactory>(::StandardParticle)
 
-            p.fill(200) // fixed color for the rocket asscent
+            p.fill(255) // fixed color for the rocket asscent
             p.ellipse(x, y, 3f, 10f)
         }else{
             vy = 0f

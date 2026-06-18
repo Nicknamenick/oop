@@ -1,9 +1,12 @@
-import processing.core.PApplet
+import processing.core.PGraphics
 import kotlin.math.sin
 import kotlin.math.PI
 
 typealias ParticleFactory = (Float, Float, Float, Float, Shape, Int, Float, Float) -> Particle
 
+/**
+ * Particle represents a single particle in the explosion. It has properties like position, velocity, shape, color and lifespan.
+ */
 abstract class Particle(
     var x: Float,
     var y: Float,
@@ -24,12 +27,15 @@ abstract class Particle(
         vy += config.gravityParticle
         lifespan -= 2f
     }
-    abstract fun draw(p: PApplet)
+    abstract fun draw(p: PGraphics)
     fun isDead(): Boolean{
         return lifespan <= 0f
     }
 }
 
+/**
+ * StandardParticle is a basic implementation of a particle that simply moves according to its velocity and fades out over time.
+ */
 class StandardParticle(
     x: Float,
     y: Float,
@@ -40,11 +46,16 @@ class StandardParticle(
     lifespan: Float,
     size: Float = 5f
 ) : Particle(x, y, vx, vy, shape, color, lifespan, size) {
-    override fun draw(p: PApplet) {
+    override fun draw(p: PGraphics) {
         p.fill(color, lifespan)
         shape.draw(p, x, y, size)
     }
 }
+
+/**
+ * SpreadParticle is a particle that changes its velocity randomly every few frames
+ * by adding a small random value to its velocity.
+ */
 class SpreadParticle(
     x: Float,
     y: Float,
@@ -60,18 +71,23 @@ class SpreadParticle(
     override fun update() {
         super.update()
         crackleTimer++
+        // every 3 frames
         if (crackleTimer % 3 == 0) {
             vx += (Math.random().toFloat() - 0.5f) * 2f
             vy += (Math.random().toFloat() - 0.5f) * 2f
         }
     }
 
-    override fun draw(p: PApplet) {
+    override fun draw(p: PGraphics) {
         p.fill(color, lifespan)
         shape.draw(p, x, y, size)
     }
 }
 
+/**
+ * CrackleParticle is a particle that creates a crackling effect by modulating its alpha value with a sine wave.
+ * its created by wrapping another particle and modulating its alpha value based on a sine wave to create a crackling effect.
+ */
 class CrackleParticle(
     private val inner: Particle,
     private val intensity: Float = 1f,
@@ -91,7 +107,7 @@ class CrackleParticle(
         counter++
     }
 
-    override fun draw(p: PApplet) {
+    override fun draw(p: PGraphics) {
         // Sanfter Übergang mit Sin-Welle (statt abruptem Wechsel)
         val phase = (counter % (interval * 2)).toFloat() / (interval * 2)
         val smoothWave = sin(phase * PI).toFloat()
@@ -103,6 +119,10 @@ class CrackleParticle(
     }
 }
 
+/**
+ * crackleFactory is a higher-order function that creates a ParticleFactory which produces CrackleParticles.
+ * It takes an optional intensity and interval parameter to control the crackling effect, and a particle to create the inner particle.
+ */
 fun crackleFactory(
     intensity: Float = 1f,
     interval: Int = 5,

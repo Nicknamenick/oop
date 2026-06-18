@@ -1,5 +1,7 @@
+import postProcessing.GlowEffect
 import processing.core.PApplet
-import com.google.gson.Gson
+import postProcessing.PostProcessingPipeline
+import processing.core.PGraphics
 
 object Global {
     lateinit var papp: PApplet
@@ -11,13 +13,26 @@ class ProcessingMain : PApplet() {
     private val eventListener = EventListener(fireworks)
     private var paused = false
 
+    private lateinit var postProcessingPipeline: PostProcessingPipeline
+    private lateinit var mainCanvas: PGraphics
+    private lateinit var glowEffect: GlowEffect
+
     override fun settings() {
         size(config.windowSizeX, config.windowSizeY)
     }
 
     override fun setup() {
         Global.papp = this
-        background(255)
+
+        mainCanvas = createGraphics(width, height)
+        glowEffect = GlowEffect(this)
+        postProcessingPipeline = PostProcessingPipeline(this)
+        postProcessingPipeline.addEffect(glowEffect)
+
+        background(10)
+        mainCanvas.beginDraw()
+        mainCanvas.background(10)
+        mainCanvas.endDraw()
     }
 
     override fun mousePressed() {
@@ -43,32 +58,43 @@ class ProcessingMain : PApplet() {
                 fireworks.add(newFirework)
             }
         }
+        if(mouseButton == RIGHT){
+            glowEffect.toggle()
+        }
     }
 
     override fun draw() {
-        // setup background color using config values
-        background(config.backgroundColor[0],
-            config.backgroundColor[1],
-            config.backgroundColor[2],
-            config.backgroundColor[3]
-        )
-        // ground: lines use stroke (not fill). set stroke color and weight, and remove trailing comma
-        stroke(255f, 255f, 255f)
-        strokeWeight(2f)
-        line(80f, height.toFloat() -10f, width.toFloat() - 80f, height.toFloat() - 10f)
-        noStroke()
+        if (paused) return
+
+        mainCanvas.beginDraw()
+        val bg = config.backgroundColor
+
+        mainCanvas.noStroke()
+        mainCanvas.fill(bg[0], bg[1], bg[2], bg[3])
+        mainCanvas.rect(0f, 0f, width.toFloat(), height.toFloat())
+
+        mainCanvas.fill(255)
+        mainCanvas.text("FPS: ${frameRate.toInt()}", 10f, 20f)
+        mainCanvas.text("press space to pause", 10f, 40f)
+        mainCanvas.text("press right mouse button to toggle glow effect", 10f, 60f)
+
+        eventListener.checkParticleCollision()
 
         if(config.mode == "normal"){
-            modeNormal()
+            modeNormal(mainCanvas)
+        }else if(config.mode == "show") {
+            modeShow(mainCanvas)
         }
-        if(config.mode == "show"){
-            modeShow()
-        }
+
+        mainCanvas.endDraw()
+        postProcessingPipeline.processAndDraw(mainCanvas)
     }
 
 
-
-    fun modeNormal() {
+    /**
+     * Rockets are spawned randomly based on the spawn chance and current number of fireworks, or if there are no fireworks at all.
+     */
+    fun modeNormal(canvas: PGraphics) {
         if ((random(0.75f) < 0.02f && fireworks.size <= 3) || fireworks.isEmpty()) {
             val initialVelocity = random(-config.maxInitialVelocity, -config.minInitialVelocity)
             val x = random(width.toFloat())
@@ -93,13 +119,17 @@ class ProcessingMain : PApplet() {
 
         eventListener.checkParticleCollision()
         fireworks.forEach { it.update() }
-        fireworks.forEach { it.draw(this) }
+        fireworks.forEach { it.draw(canvas) }
         fireworks.removeAll { it.isDead }
     }
 
     var currentQueueIndex: Int = 0
     var showStartTime: Float = -1f
-    fun modeShow() {
+
+    /**
+     * Rockets are spawned based on a predefined queue in the configuration, allowing for precise timing and choreography of fireworks displays.
+     */
+    fun modeShow(canvas: PGraphics) {
         if (showStartTime == -1f) {
             showStartTime = millis() / 1000f
         }
@@ -124,11 +154,11 @@ class ProcessingMain : PApplet() {
         }
 
         fireworks.forEach { it.update() }
-        fireworks.forEach { it.draw(this) }
+        fireworks.forEach { it.draw(canvas) }
         fireworks.removeAll { it.isDead }
     }
 
-    // help functions
+
     override fun keyPressed() {
         if (key == ' ') {
             paused = !paused
@@ -138,8 +168,5 @@ class ProcessingMain : PApplet() {
                 loop()
             }
         }
-    }
-    fun isMouseLeftPressed(): Boolean {
-        return mousePressed && mouseButton == LEFT
     }
 }
