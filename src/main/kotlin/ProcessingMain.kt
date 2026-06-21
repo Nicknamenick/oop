@@ -147,7 +147,7 @@ class ProcessingMain : PApplet() {
                 if (rocketData != null) {
                     val newFirework = Config.createRocketFromConfig(entry.x,height.toFloat(), -entry.initialVelocity, rocketData)
                     fireworks.add(newFirework)
-                    println("Rakete ${entry.rocketKey} bei ${elapsedSeconds}s gespawnt.")
+                    println("Rakete ${entry.rocketKey} bei ${elapsedSeconds}s gespawned.")
                 }
                 currentQueueIndex++
             }

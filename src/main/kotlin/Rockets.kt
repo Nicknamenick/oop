@@ -1,5 +1,6 @@
 /**
  * Example rockets with different explosion patterns and particle effects.
+ * Implemented as functions that return a RocketSpawner instead of a JSON object
  */
 
 fun rocket1(x: Float, y: Float, initialVelocity: Float): AbstractFirework {

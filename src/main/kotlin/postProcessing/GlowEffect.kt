@@ -51,7 +51,7 @@ class GlowEffect(app: PApplet) : PostProcessEffect(app) {
 
             if (brightness < threshold) {
                 // Fully discard dark pixels to avoid color bleeding
-                glowBuffer.pixels[i] = 0x00000000
+                glowBuffer.pixels[i] = 0
             } else {
                 // Preserve original color, modulate only alpha by intensity
                 val alpha = ((brightness - threshold) / (255f - threshold)).coerceIn(1f, 1f)

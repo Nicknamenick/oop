@@ -86,7 +86,7 @@ class SpreadParticle(
 
 /**
  * CrackleParticle is a particle that creates a crackling effect by modulating its alpha value with a sine wave.
- * its created by wrapping another particle and modulating its alpha value based on a sine wave to create a crackling effect.
+ * it is created by wrapping another particle and modulating its alpha value based on a sine wave to create a crackling effect.
  */
 class CrackleParticle(
     private val inner: Particle,

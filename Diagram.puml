@@ -1,135 +1,193 @@
-@startuml "Fireworks Diagram Final"
+@startuml "Fireworks Diagram Final Updated"
+
 ' --- Schrifteinstellungen für höhere Lesbarkeit ---
-skinparam defaultFontSize 16
-skinparam classFontSize 19
-skinparam attributeFontSize 15
-skinparam methodFontSize 15
+skinparam defaultFontSize 14
+skinparam classFontSize 16
+skinparam attributeFontSize 13
+skinparam methodFontSize 13
 
 skinparam monochrome true
 skinparam shadowing true
 
-' --- Fireworks Hierarchie ---
-abstract class AbstractFirework {
-    + x: Float
-    + y: Float
-    + isDead: Boolean
-    + {abstract} update(): Unit
-    + {abstract} draw(p: Object): Unit
+package "Core" {
+    class ProcessingMain {
+        - fireworks: MutableList<AbstractFirework>
+        - eventListener: EventListener
+        - paused: Boolean
+        - postProcessingPipeline: PostProcessingPipeline
+        - mainCanvas: PGraphics
+        - glowEffect: GlowEffect
+        + settings(): Unit
+        + setup(): Unit
+        + mousePressed(): Unit
+        + keyPressed(): Unit
+        + modeNormal(canvas: PGraphics): Unit
+        + modeShow(canvas: PGraphics): Unit
+    }
+
+    class EventListener {
+        - fireworks: MutableList<AbstractFirework>
+        + checkParticleCollision(): Unit
+    }
 }
 
-class Rocket {
-    + initialVelocity: Float
-    + vy: Float
-    + gravity: Float
-    + exploded: Boolean
-    + particles: MutableList<Particle>
-    + update(): Unit
-    + draw(p: Object): Unit
-    + explode(): Unit
+package "Fireworks" {
+    abstract class AbstractFirework {
+        + x: Float
+        + y: Float
+        + isDead: Boolean
+        + {abstract} update(): Unit
+        + {abstract} draw(p: PGraphics): Unit
+    }
+
+    class Rocket {
+        + initialVelocity: Float
+        + vy: Float
+        + gravity: Float
+        + exploded: Boolean
+        + particles: MutableList<Particle>
+        + update(): Unit
+        + draw(p: PGraphics): Unit
+        + explode(): Unit
+    }
+
+    class RocketSpawner {
+        + lifespan: Float
+        + rocketColor: Int
+        + payloads: List<ExplosionPayload>
+        + explode(): Unit
+    }
+
+    class ExplosionPayload <<data>> {
+        + partNum: Int
+        + explosionShape: ExplosionShape
+        + particleFactories: List<ParticleFactory>
+        + particleShape: Shape
+        + baseColor: Int
+        + cRange: Int
+        + size: Float
+        + power: Float
+    }
 }
+
+package "Particles" {
+    abstract class Particle {
+        + x: Float
+        + y: Float
+        + vx: Float
+        + vy: Float
+        + shape: Shape
+        + color: Int
+        + lifespan: Float
+        + size: Float
+        + update(): Unit
+        + {abstract} draw(p: PGraphics): Unit
+        + isDead(): Boolean
+    }
+
+    class StandardParticle {
+        + draw(p: PGraphics): Unit
+    }
+
+    class SpreadParticle {
+        + update(): Unit
+        + draw(p: PGraphics): Unit
+    }
+
+    class CrackleParticle {
+        - inner: Particle
+        - counter: Int
+        - interval: Int
+        + update(): Unit
+        + draw(p: PGraphics): Unit
+    }
+}
+
+package "Shapes" {
+    interface Shape {
+        + draw(p: PGraphics, x: Float, y: Float, size: Float): Unit
+    }
+
+    class Circle implements Shape {
+        + draw(p: PGraphics, x: Float, y: Float, size: Float): Unit
+    }
+
+    class Square implements Shape {
+        + draw(p: PGraphics, x: Float, y: Float, size: Float): Unit
+    }
+
+    abstract class ExplosionShape {
+        + {abstract} direction(index: Int, total: Int, power: Float): Pair<Float, Float>
+    }
+
+    class CircleExplosionShape extends ExplosionShape {
+        + direction(index: Int, total: Int, power: Float): Pair<Float, Float>
+    }
+
+    class SquareExplosionShape extends ExplosionShape {
+        + direction(index: Int, total: Int, power: Float): Pair<Float, Float>
+    }
+
+    class StarExplosionShape extends ExplosionShape {
+        - spikes: Int
+        - outerRadius: Float
+        - innerRadius: Float
+        - jitterAmount: Float
+        + direction(index: Int, total: Int, power: Float): Pair<Float, Float>
+    }
+
+    class TriangleExplosionShape extends ExplosionShape {
+        + direction(index: Int, total: Int, power: Float): Pair<Float, Float>
+    }
+}
+
+package "PostProcessing" {
+    class PostProcessingPipeline {
+        - effects: MutableList<PostProcessEffect>
+        - buffer1: PGraphics
+        - buffer2: PGraphics
+        + addEffect(effect: PostProcessEffect): Unit
+        + processAndDraw(rawCanvas: PGraphics): Unit
+    }
+
+    abstract class PostProcessEffect {
+        + isEnabled: Boolean
+        + toggle(): Unit
+        + {abstract} apply(input: PGraphics, output: PGraphics): Unit
+    }
+
+    class GlowEffect extends PostProcessEffect {
+        - scale: Int
+        - smallW: Int
+        - smallH: Int
+        - glowBuffer: PGraphics
+        - threshold: Int
+        + apply(input: PGraphics, output: PGraphics): Unit
+    }
+}
+
+' --- Beziehungen ---
+ProcessingMain *--> AbstractFirework : verwaltet >
+ProcessingMain *--> EventListener : nutzt >
+ProcessingMain *--> PostProcessingPipeline : besitzt >
+ProcessingMain *--> GlowEffect : nutzt >
+
+EventListener --> AbstractFirework : prüft Kollisionen auf >
+
 AbstractFirework <|-- Rocket
-
-class RocketSpawner {
-    + lifespan: Float
-    + rocketColor: Int
-    + payloads: List<ExplosionPayload>
-    + explode(): Unit
-}
 Rocket <|-- RocketSpawner
+RocketSpawner *--> ExplosionPayload : besteht aus >
 
-class ExplosionPayload <<data>> {
-    + partNum: Int
-    + explosionShape: ExplosionShape
-    + particleFactories: List<Object>
-    + particleShape: Shape
-    + baseColor: Int
-    + cRange: Int
-    + size: Float
-    + power: Float
-}
-
-' --- Particles Hierarchie ---
-abstract class Particle {
-    + x: Float
-    + y: Float
-    + vx: Float
-    + vy: Float
-    + shape: Shape
-    + color: Int
-    + lifespan: Float
-    + size: Float
-    + update(): Unit
-    + {abstract} draw(p: Object): Unit
-    + isDead(): Boolean
-}
-
-class StandardParticle {
-    + draw(p: Object): Unit
-}
-Particle <|-- StandardParticle
-
-class SpreadParticle {
-    - crackleTimer: Int
-    + update(): Unit
-    + draw(p: Object): Unit
-}
-Particle <|-- SpreadParticle
-
-class CrackleParticle {
-    - inner: Particle
-    - intensity: Float
-    - interval: Int
-    - counter: Int
-    + update(): Unit
-    + draw(p: Object): Unit
-}
-Particle <|-- CrackleParticle
-
-' --- Shapes ---
-interface Shape {
-    + draw(p: Object, x: Float, y: Float, size: Float): Unit
-}
-
-class Circle implements Shape {
-    + draw(p: Object, x: Float, y: Float, size: Float): Unit
-}
-
-class Square implements Shape {
-    + draw(p: Object, x: Float, y: Float, size: Float): Unit
-}
-
-' --- Explosion Shapes ---
-abstract class ExplosionShape {
-    + {abstract} direction(index: Int, total: Int, power: Float): Pair<Float, Float>
-}
-
-class CircleExplosionShape extends ExplosionShape {
-    + direction(index: Int, total: Int, power: Float): Pair<Float, Float>
-}
-
-class SquareExplosionShape extends ExplosionShape {
-    + direction(index: Int, total: Int, power: Float): Pair<Float, Float>
-}
-
-class StarExplosionShape {
-    - spikes: Int
-    - outerRadius: Float
-    - innerRadius: Float
-    - jitterAmount: Float
-    + direction(index: Int, total: Int, power: Float): Pair<Float, Float>
-}
-ExplosionShape <|-- StarExplosionShape
-
-class TriangleExplosionShape extends ExplosionShape {
-    + direction(index: Int, total: Int, power: Float): Pair<Float, Float>
-}
-
-' --- Beziehungen & Verknüpfungen ---
-Rocket o-- Particle : enthält >
-RocketSpawner o-- ExplosionPayload : besitzt >
-ExplosionPayload --> ExplosionShape : definiert >
+ExplosionPayload --> ExplosionShape : nutzt >
 ExplosionPayload --> Shape : nutzt >
-Particle --> Shape : wird gezeichnet mit >
-CrackleParticle o-- Particle : dekoriert (Decorator Pattern) >
+
+Rocket *--> Particle : besitzt >
+
+Particle <|-- StandardParticle
+Particle <|-- SpreadParticle
+Particle <|-- CrackleParticle
+CrackleParticle o--> Particle : dekoriert >
+
+PostProcessingPipeline *--> PostProcessEffect : nacheinander ausführen >
 
 @enduml

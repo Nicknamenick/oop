@@ -14,6 +14,12 @@ interface Shape {
     fun draw(p: PGraphics, x: Float, y: Float, size: Float)
 }
 
+/**
+ * ExplosionShape is an abstract class that defines the method for calculating the direction of particles
+ * The direction is calculated based on the index of the particle and the total number of particles
+ * allowing for different explosion patterns like circular, square, star-shaped
+ * or triangular explosions.
+ */
 abstract class ExplosionShape {
     abstract fun direction(index: Int, total: Int, power: Float=1f): Pair<Float, Float>
 }
